@@ -1,0 +1,9 @@
+numpy==2.3.3
+pandas
+ipykernel
+matplotlib
+scikit-learn>=1.7.2
+requests
+shiny>=1.5.0
+Jinja2
+Seatborn>=0.7.1
