@@ -6,4 +6,4 @@ scikit-learn>=1.7.2
 requests
 shiny>=1.5.0
 Jinja2
-seaborn>=0.7.1
+Seatborn>=0.7.1
