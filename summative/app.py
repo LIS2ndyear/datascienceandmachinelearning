@@ -6,10 +6,10 @@ import matplotlib.pyplot as plt
 # Load data
 df = pd.read_csv('attendance_anonymised-1.csv')
 
-# Drop planned end date column
+# Drop planned end date column; not needed for this analysis 
 df = df.drop('Planned End Date', axis=1)
 
-# Rename columns
+# Rename columns to be clear
 df = df.rename(columns={
     'Long Description': 'Module Name',
     'Planned Start Date': 'Date',
@@ -32,13 +32,14 @@ app_ui = ui.page_sidebar(
             choices=sorted(df['Module Name'].dropna().unique())
         )
     ),
-    # Maint panel 
+    # Main panel shows title, plot and statitcs
     ui.h1("Module Attendance Dashboard"),
     ui.output_plot("attendance_plot"),
     ui.output_text("attendance_summary")
 )
 
 # Server 
+# Define server logic 
 def server(input, output, session):
 
     # Plot attendance over time for selected module
@@ -47,13 +48,17 @@ def server(input, output, session):
     def attendance_plot():
         # Find select module
         module = input.module_selector()
+
         if not module:
             # If no module selected, give none
             return None
+        
         # Filter data for select module
         module_df = df[df['Module Name'] == module]
+
         # Calculate mean attendance rate over time
         attendance_over_time = module_df.groupby("Date")['Attended'].mean()
+        
         # Create line graph
         fig, ax = plt.subplots(figsize=(10, 6))
         ax.plot(attendance_over_time.index, attendance_over_time.values, marker='o')
@@ -80,12 +85,14 @@ def server(input, output, session):
         # Filter for select module
         module_df = df[df['Module Name'] == module]
         # Calculate attendance statistics
+
         attendance_over_time = module_df.groupby("Date")['Attended'].mean()
 
         # Calculate average, min and max attendance
         avg = attendance_over_time.mean()
         mn = attendance_over_time.min()
         mx = attendance_over_time.max()
+        
         # Return statement with statistics
         return f"Average: {avg:.1%} | Min: {mn:.1%} | Max: {mx:.1%}"
 
